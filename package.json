@@ -1,0 +1,14 @@
+{
+  "name": "spikebot",
+  "version": "1.0.0",
+  "description": "Spike Slack Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/bolt": "^4.3.0"
+  }
+}
