@@ -62,30 +62,39 @@ export function addLeaderboard(name, description) {
     leaderboards.push({name: name, description: description, users: []})
 }
 
+/* example table:
+
+LeaderboardName
++-------+-----+
+| name1 | 100 |
++-------+-----+
+| name2 | 90  |
++-------+-----+
+*/
+
 export function formatLeaderboard(leaderboardName) {
     var leaderboard = leaderboards.find(lb => lb.name === leaderboardName);
     if (leaderboard) {
-        var txt = "";
+        var txt = leaderboard.description + '\n';
         var maxUserLength = 0;
         var maxScoreLength = 0;
-        for (user in leaderboard.users) {
-            if (user.name.lengh > maxUserLength) {
-                maxUserLength = user.name.length
+        for (let user in leaderboard.users) {
+            if (leaderboard.users[user].name.length > maxUserLength) {
+                maxUserLength = leaderboard.users[user].name.length
             }
-            if (user.score.toString().length > maxScoreLength) {
-                maxScoreLength = user.score.toString().length;
+            if (leaderboard.users[user].score.toString().length > maxScoreLength) {
+                maxScoreLength = leaderboard.users[user].score.toString().length;
             }
         }
-        var tableLength = maxUserLength+maxScoreLength+7;
         txt += '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
         txt += '\n';
-        for (user in leaderboard.users) {
+        for (let user in leaderboard.users) {
             txt += '| ';
-            txt += user.name;
-            txt += " ".repeat(maxUserLength-user.name.length);
+            txt += leaderboard.users[user].name;
+            txt += " ".repeat(maxUserLength-leaderboard.users[user].name.length);
             txt += ' | ';
-            txt += user.score;
-            txt += " ".repeat(maxScoreLength - user.score.toString().length);
+            txt += leaderboard.users[user].score;
+            txt += " ".repeat(maxScoreLength - leaderboard.users[user].score.toString().length);
             txt += " |";
             txt += '\n';
             txt += '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
