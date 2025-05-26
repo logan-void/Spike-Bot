@@ -62,6 +62,10 @@ export function addLeaderboard(name, description) {
     leaderboards.push({name: name, description: description, users: []})
 }
 
+export function removeLeaderboard(name) {
+    leaderboards.splice(leaderboards.indexOf(leaderboards.find(lb => lb.name === name)),1);
+}
+
 /* example table:
 
 LeaderboardName
