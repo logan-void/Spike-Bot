@@ -1,3 +1,6 @@
+import * as Censor from "./censor.js";
+import * as Msgfn from "./message_functions.js"
+
 const { App } = require('@slack/bolt');
 
 // Initializes your app with your bot token and signing secret
@@ -6,24 +9,22 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-var swearwords = ["shit", "fuck", "damn", "testcensor"]; // sorry for the obscene code (:
-
-function censor(string) { // unused, but can at some point be used to censor strings
-    var newString = string;
-    for (let word in swearwords) {
-        console.log(swearwords[word])
-        newString = string.replaceAll(swearwords[word], '{censored}');
-    }
-    return newString;
-}
 
 // Listens to incoming messages that contain swearwords
-for (let word in swearwords) {
+for (let word in Censor.swearwords) {
   app.message(word, async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     await say(`Hi <@${message.user}>, could you please not swear in the chat? Thank you!`);
   });
 }
+
+// I'm testing if I can receive a message: (using fetchMessage) (this only works in bot-testing-public)
+app.message("testword", async ({ message, say }) => {
+    // say() sends a message to the channel where the event was triggered
+    await say(`Hi <@${message.user}>, this message has been recieved! Is this your message: `+Msgfn.fetchMessage(Msgfn.bot_testing_public)+'?');
+  });
+
+// app start
 
 (async () => {
   // Start your app
