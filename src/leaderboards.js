@@ -5,7 +5,7 @@
 
 const { App } = require('@slack/bolt');
 
-async function getAllPeople() {
+export async function getAllPeople() {
     try {
         // Call the users.list method using the WebClient
         const result = await client.users.list();
@@ -17,7 +17,7 @@ async function getAllPeople() {
     }
 }
 
-export var members = getAllPeople()
+export var members = getAllPeople();
 
 export var leaderboards = [
     {
@@ -26,7 +26,7 @@ export var leaderboards = [
         users: [
         ]
     }
-]
+];
 
 export function addToLeaderboard(leaderboardName, userName, score) {
     var leaderboard = leaderboards.find(lb => lb.name === leaderboardName);
@@ -57,9 +57,14 @@ export function removeFromLeaderboard(leaderboardName, userName) {
     }
 }
 
+export function orderLeaderboard(name) {
+    var leaderboard = leaderboards.find(lb => lb.name === name);
+    leaderboard.users.sort(function(userA, userB){return userA.score - userB.score});
+    leaderboard.users.reverse();
+}
 
 export function addLeaderboard(name, description) {
-    leaderboards.push({name: name, description: description, users: []})
+    leaderboards.push({name: name, description: description, users: []});
 }
 
 export function removeLeaderboard(name) {
@@ -78,22 +83,29 @@ LeaderboardName
 
 export function formatLeaderboard(leaderboardName) {
     var leaderboard = leaderboards.find(lb => lb.name === leaderboardName);
+    leaderboard.users.sort(function(userA, userB){return userA.score - userB.score});
+    leaderboard.users.reverse();
     if (leaderboard) {
         var txt = leaderboard.description + '\n';
         var maxUserLength = 0;
         var maxScoreLength = 0;
+        var tableLength = leaderboard.users.length;
+        var maxIndexLength = (tableLength+1).toString().length;
         for (let user in leaderboard.users) {
             if (leaderboard.users[user].name.length > maxUserLength) {
-                maxUserLength = leaderboard.users[user].name.length
+                maxUserLength = leaderboard.users[user].name.length;
             }
             if (leaderboard.users[user].score.toString().length > maxScoreLength) {
                 maxScoreLength = leaderboard.users[user].score.toString().length;
             }
         }
-        txt += '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
+        txt += '+' + "-".repeat(maxIndexLength+2) + '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
         txt += '\n';
         for (let user in leaderboard.users) {
             txt += '| ';
+            txt += (Number(user)+1).toString();
+            txt += ' '.repeat(maxIndexLength-user.toString().length);
+            txt += ' | ';
             txt += leaderboard.users[user].name;
             txt += " ".repeat(maxUserLength-leaderboard.users[user].name.length);
             txt += ' | ';
@@ -101,7 +113,7 @@ export function formatLeaderboard(leaderboardName) {
             txt += " ".repeat(maxScoreLength - leaderboard.users[user].score.toString().length);
             txt += " |";
             txt += '\n';
-            txt += '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
+            txt += '+' + '-'.repeat(maxIndexLength+2) + '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
             txt += '\n';
         }
         return txt
