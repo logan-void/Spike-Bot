@@ -31,7 +31,7 @@ export var leaderboards = [
 export function addToLeaderboard(leaderboardName, userName, score) {
     var leaderboard = leaderboards.find(lb => lb.name === leaderboardName);
     if (leaderboard) {
-        var userEntry = leaderboard.users.find(name => name === userName);
+        var userEntry = leaderboard.users.find(user => user.name === userName);
         if (userEntry) {
             userEntry.score += score;
         } else {
@@ -40,4 +40,24 @@ export function addToLeaderboard(leaderboardName, userName, score) {
     } else {
         console.error('Leaderboard ${leaderboardName} not found.');
     }
+}
+
+export function removeFromLeaderboard(leaderboardName, userName) {
+    var leaderboard = leaderboards.find(lb => lb.name === leaderboardName);
+    if (leaderboard) {
+        var userEntry = leaderboard.users.find(user => user.name === userName);
+        if (userEntry) {
+            var index = leaderboard.users.indexOf(userEntry);
+            leaderboard.users.splice(index, 1);
+        } else {
+            console.error('User ${userName} not found.');
+        }
+    } else {
+        console.error('Leaderboard ${leaderboardName} not found.');
+    }
+}
+
+
+export function addLeaderboard(name, description) {
+    leaderboards.push({name: name, description: description, users: []})
 }
