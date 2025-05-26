@@ -61,3 +61,38 @@ export function removeFromLeaderboard(leaderboardName, userName) {
 export function addLeaderboard(name, description) {
     leaderboards.push({name: name, description: description, users: []})
 }
+
+export function formatLeaderboard(leaderboardName) {
+    var leaderboard = leaderboards.find(lb => lb.name === leaderboardName);
+    if (leaderboard) {
+        var txt = "";
+        var maxUserLength = 0;
+        var maxScoreLength = 0;
+        for (user in leaderboard.users) {
+            if (user.name.lengh > maxUserLength) {
+                maxUserLength = user.name.length
+            }
+            if (user.score.toString().length > maxScoreLength) {
+                maxScoreLength = user.score.toString().length;
+            }
+        }
+        var tableLength = maxUserLength+maxScoreLength+7;
+        txt += '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
+        txt += '\n';
+        for (user in leaderboard.users) {
+            txt += '| ';
+            txt += user.name;
+            txt += " ".repeat(maxUserLength-user.name.length);
+            txt += ' | ';
+            txt += user.score;
+            txt += " ".repeat(maxScoreLength - user.score.toString().length);
+            txt += " |";
+            txt += '\n';
+            txt += '+' + "-".repeat(maxUserLength+2)+'+'+"-".repeat(maxScoreLength+2)+'+';
+            txt += '\n';
+        }
+        return txt
+    } else {
+        console.error('Leaderboard ${leaderboardName} not found.');
+    }
+}
